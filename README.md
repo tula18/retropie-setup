@@ -1,0 +1,2 @@
+# retropie
+RetroPie scripts etc.
