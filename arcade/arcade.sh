@@ -14,5 +14,4 @@ if [[ -f ${ARCADE_CONFIG} ]]; then
     sed -i "s|input_player${i}_analog_dpad_mode = \"0\"|input_player${i}_analog_dpad_mode = \"1\"|" "${ARCADE_CONFIG}";
   done
 fi
-
-echo "[OK] finished running arcade.sh"
+echo "[OK] arcade setup complete."

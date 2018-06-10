@@ -8,3 +8,6 @@
 
 # Run the arcade script
 ./arcade/arcade.sh
+
+# Run the overclock script
+./overclock/new_overclock.sh
