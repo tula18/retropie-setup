@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # Run the savefile script
-./scripts/rpc80_savefile.sh
+./scripts/rpc80_savefile_setup.sh
 
 # Run the N64 script
-./n64/n64.sh
+./n64/n64_setup.sh
 
 # Run the arcade script
-./arcade/arcade.sh
+./arcade/arcade_setup.sh
 
 # Run the overclock script
 ./overclock/overclock_setup.sh
