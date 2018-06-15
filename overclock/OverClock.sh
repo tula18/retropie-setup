@@ -21,10 +21,10 @@ dialog --backtitle "Pi3 & Pi3B+ OverClocking" \
 --msgbox "${infobox}" 35 110
 
 # Config file path
-CONFIG_PATH=overclock/test.txt
+CONFIG_PATH=/boot/config.txt
 
 # Overclocking settings description
-OVERCLOCK_DESCRIPTION="# Uncomment to enable custom overclock settings"
+OVERCLOCK_DESCRIPTION="# uncomment to enable custom overclock settings"
 
 declare -a OVERCLOCK_SETTINGS=(
   "gpu_freq=500"
@@ -61,10 +61,10 @@ function main_menu() {
 function enable_oc() {
   dialog --infobox "Applying ..." 3 20 ; sleep 2
   overclock_setup
-  sed -i "s|#*arm_freq=.*|arm_freq=$1|" "${CONFIG_PATH}";
+  sudo sed -i "s|#*arm_freq=.*|arm_freq=$1|" "${CONFIG_PATH}";
   for val in ${OVERCLOCK_SETTINGS[@]}; do
     if grep -q "#${val}" ${CONFIG_PATH}; then
-      sed -i "s|#${val}|${val}|" "${CONFIG_PATH}";
+      sudo sed -i "s|#${val}|${val}|" "${CONFIG_PATH}";
     fi
   done
   echo "[OK] rebooting ..."
@@ -75,9 +75,9 @@ function enable_oc() {
 function disable_oc() {
   dialog --infobox "Applying ..." 3 20 ; sleep 2
   overclock_setup
-  sed -i "s|arm_freq=|#arm_freq=|" "${CONFIG_PATH}";
+  sudo sed -i "s|arm_freq=|#arm_freq=|" "${CONFIG_PATH}";
   for val in ${OVERCLOCK_SETTINGS[@]}; do
-    sed -i "s|^${val}|#${val}|" "${CONFIG_PATH}";
+    sudo sed -i "s|^${val}|#${val}|" "${CONFIG_PATH}";
   done
   echo "[OK] rebooting ..."
   sudo reboot
@@ -89,7 +89,7 @@ function overclock_setup() {
     echo -e "\n${OVERCLOCK_DESCRIPTION}" >> ${CONFIG_PATH}
     for val in ${OVERCLOCK_SETTINGS[@]}; do
       if ! grep -q "${val}" ${CONFIG_PATH}; then
-        echo $val >> ${CONFIG_PATH}
+        sudo echo $val >> ${CONFIG_PATH}
       fi
     done
   fi
