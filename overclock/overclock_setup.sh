@@ -7,16 +7,16 @@ echo '[OK] added new overclocking script'
 
 # Remove superfluous text files
 echo 'Removing superfluous text files ...'
-rm /boot/config_OCoff.txt
-rm /boot/config_OC.txt
-rm /boot/config_OC+.txt
-rm /boot/config.txt.overclock
+sudo rm /boot/config_OCoff.txt
+sudo rm /boot/config_OC.txt
+sudo rm /boot/config_OC+.txt
+sudo rm /boot/config.txt.overclock
 echo '[OK] removed text files'
 
 # Remove superfluous script files
 echo 'Removing superfluous script files ...'
-rm /boot/disable_OC.sh
-rm /boot/enable_OC.sh
-rm /boot/enable_OC+.sh
+sudo rm /boot/disable_OC.sh
+sudo rm /boot/enable_OC.sh
+sudo rm /boot/enable_OC+.sh
 echo '[OK] removed script files'
 echo '[OK] done'
