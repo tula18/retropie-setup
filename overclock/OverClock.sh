@@ -28,6 +28,7 @@ OVERCLOCK_DESCRIPTION="# uncomment to enable custom overclock settings"
 
 declare -a OVERCLOCK_SETTINGS=(
   "gpu_freq=500"
+  "gpu_mem=512"
   "core_freq=500"
   "sdram_freq=500"
   "sdram_schmoo=0x02000020"
