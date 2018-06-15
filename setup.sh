@@ -10,4 +10,4 @@
 ./arcade/arcade.sh
 
 # Run the overclock script
-./overclock/new_overclock.sh
+./overclock/overclock_setup.sh

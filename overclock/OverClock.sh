@@ -7,21 +7,37 @@ infobox="${infobox}OverClocking Your Pi3 & Pi3B+\n\n"
 infobox="${infobox}\n"
 infobox="${infobox}This will amend the config.txt and enable/disable overclocking.\n"
 infobox="${infobox}(A case with a fan for good CPU cooling is recommended).\n"
-infobox="${infobox}Pi3 OC at 1300MHz & Pi3B+ OC at 1500MHz\n"
-infobox="${infobox}\n"
+infobox="${infobox}Pi3 OC at 1300MHz & Pi3B+ OC at 1500MHz or 1550MHz\n"
 infobox="${infobox}\n\n"
-infobox="${infobox}**Enable**\nOverclocks the CPU"
+infobox="${infobox}**Enable**\n"
+infobox="${infobox}Overclocks the CPU\n"
 infobox="${infobox}\n"
-infobox="${infobox}**Disable**\nDisables overclocking"
+infobox="${infobox}**Disable**\n"
+infobox="${infobox}Disables Overclocking"
 infobox="${infobox}\n"
 
 dialog --backtitle "Pi3 & Pi3B+ OverClocking" \
---title "Pi3 & Pi3B+ OverClocking By 2Play" \
+--title "Pi3 & Pi3B+ OverClocking By 2Play & RPC80" \
 --msgbox "${infobox}" 35 110
+
+# Config file path
+CONFIG_PATH=overclock/test.txt
+
+# Overclocking settings description
+OVERCLOCK_DESCRIPTION="# Uncomment to enable custom overclock settings"
+
+declare -a OVERCLOCK_SETTINGS=(
+  "gpu_freq=500"
+  "core_freq=500"
+  "sdram_freq=500"
+  "sdram_schmoo=0x02000020"
+  "over_voltage=6"
+  "sdram_over_voltage=2"
+  "v3d_freq=525"
+)
 
 function main_menu() {
     local choice
-
     while true; do
         choice=$(dialog --backtitle "$BACKTITLE" --title " MAIN MENU " \
             --ok-label OK --cancel-label Exit \
@@ -31,48 +47,54 @@ function main_menu() {
             3 "Enable OverClocking - Pi3 B+ [1550MHz]" \
             4 "Disable OverClocking" \
             2>&1 > /dev/tty)
-
         case "$choice" in
-            1) enable_OC 1300;;
-            2) enable_OC 1500;;
-            3) enable_OC 1550;;
-            4) disable_OC ;;
+            1) enable_oc 1300;;
+            2) enable_oc 1500;;
+            3) enable_oc 1550;;
+            4) disable_oc ;;
             *) break ;;
         esac
     done
 }
 
-function enable_OC() {
+# Enables Overclocking by adding properties to /boot/config.txt
+function enable_oc() {
   dialog --infobox "Applying ..." 3 20 ; sleep 2
-  if grep "#arm_freq=800" /boot/config.txt; then
-      sudo sed -i "s|#arm_freq=800|arm_freq=$1|" "/boot/config.txt";
-      echo "[OK] rebooting ..."
-      sudo reboot
-  else
-      echo "[ERROR] previous setting: \"#arm_freq=800\" not found in /boot/config.txt"
-      echo "No changes have been made."
-      echo "Exiting."
+  overclock_setup
+  sed -i "s|#*arm_freq=.*|arm_freq=$1|" "${CONFIG_PATH}";
+  for val in ${OVERCLOCK_SETTINGS[@]}; do
+    if grep -q "#${val}" ${CONFIG_PATH}; then
+      sed -i "s|#${val}|${val}|" "${CONFIG_PATH}";
+    fi
+  done
+  echo "[OK] rebooting ..."
+  sudo reboot
+  exit
+}
+
+# Disables overclocking by commenting out overclock values
+function disable_oc() {
+  dialog --infobox "Applying ..." 3 20 ; sleep 2
+  overclock_setup
+  sed -i "s|arm_freq=|#arm_freq=|" "${CONFIG_PATH}";
+  for val in ${OVERCLOCK_SETTINGS[@]}; do
+    sed -i "s|^${val}|#${val}|" "${CONFIG_PATH}";
+  done
+  echo "[OK] rebooting ..."
+  sudo reboot
+}
+
+# Adds overclock entries to config.txt
+function overclock_setup() {
+  if ! grep -q "${OVERCLOCK_DESCRIPTION}" ${CONFIG_PATH}; then
+    echo -e "\n${OVERCLOCK_DESCRIPTION}" >> ${CONFIG_PATH}
+    for val in ${OVERCLOCK_SETTINGS[@]}; do
+      if ! grep -q "${val}" ${CONFIG_PATH}; then
+        echo $val >> ${CONFIG_PATH}
+      fi
+    done
   fi
 }
 
-function disable_OC() {
-  dialog --infobox "Applying ..." 3 20 ; sleep 2
-  # Disable overclocking for Raspberry Pi 3
-  if grep "arm_freq=1300" /boot/config.txt; then
-      sudo sed -i "s|arm_freq=1300|#arm_freq=800|" "/boot/config.txt";
-      echo "[OK] rebooting ..."
-      sudo reboot
-  # Disable overclocking for Raspberry Pi 3 B+
-  elif grep "arm_freq=1500" /boot/config.txt; then
-      sudo sed -i "s|arm_freq=1500|#arm_freq=800|" "/boot/config.txt";
-      echo "[OK] rebooting ..."
-      sudo reboot
-  # Disable overclocking for Raspberry Pi 3
-  else
-      echo "[ERROR] previous setting: \"arm_freq=1300 | arm_freq=1500\" not found in /boot/config.txt"
-      echo "No changes have been made."
-      echo "Exiting."
-  fi
-}
 
 main_menu
