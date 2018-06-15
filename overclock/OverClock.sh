@@ -69,7 +69,6 @@ function enable_oc() {
   done
   echo "[OK] rebooting ..."
   sudo reboot
-  exit
 }
 
 # Disables overclocking by commenting out overclock values
