@@ -27,13 +27,13 @@ CONFIG_PATH=/boot/config.txt
 OVERCLOCK_DESCRIPTION="# uncomment to enable custom overclock settings"
 
 declare -a OVERCLOCK_SETTINGS=(
+  "core_freq=500"
   "gpu_freq=500"
   "gpu_mem=512"
-  "core_freq=500"
-  "sdram_freq=500"
-  "sdram_schmoo=0x02000020"
   "over_voltage=6"
+  "sdram_freq=500"
   "sdram_over_voltage=2"
+  "sdram_schmoo=0x02000020"
   "v3d_freq=525"
 )
 
@@ -68,7 +68,7 @@ function enable_oc() {
       sudo sed -i "s|#${val}|${val}|" "${CONFIG_PATH}";
     fi
   done
-  echo "[OK] rebooting ..."
+  echo "[OK] rebooting raspberry pi ... "
   sudo reboot
 }
 
@@ -80,14 +80,14 @@ function disable_oc() {
   for val in ${OVERCLOCK_SETTINGS[@]}; do
     sudo sed -i "s|^${val}|#${val}|" "${CONFIG_PATH}";
   done
-  echo "[OK] rebooting ..."
+  echo "[OK] rebooting raspberry pi ... "
   sudo reboot
 }
 
 # Adds overclock entries to config.txt
 function overclock_setup() {
   if ! grep -q "${OVERCLOCK_DESCRIPTION}" ${CONFIG_PATH}; then
-    echo -e "\n${OVERCLOCK_DESCRIPTION}" >> ${CONFIG_PATH}
+    sudo echo -e "\n${OVERCLOCK_DESCRIPTION}" >> ${CONFIG_PATH}
     for val in ${OVERCLOCK_SETTINGS[@]}; do
       if ! grep -q "${val}" ${CONFIG_PATH}; then
         sudo echo $val >> ${CONFIG_PATH}
