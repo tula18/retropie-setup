@@ -11,3 +11,6 @@
 
 # Run the overclock script
 ./overclock/overclock_setup.sh
+
+# Clear the motd file (needs testing!)
+truncate -s 0 /etc/motd
