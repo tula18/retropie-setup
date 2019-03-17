@@ -3,8 +3,8 @@
 # Run the savefile script
 ./scripts/rpc80_savefile_setup.sh
 
-# Run the auto-state scripts
-./scripts/nes_autosave_fix.sh
+# Run the auto savestate fix script
+./scripts/auto_savestate_fix.sh
 
 # Run the N64 script
 ./n64/n64_setup.sh
