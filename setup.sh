@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
 
-# Run the savefile script
+# savefile setup
 ./scripts/rpc80_savefile_setup.sh
 
-# Run the auto savestate fix script
+# auto savestate fix
 ./scripts/auto_savestate_fix.sh
 
-# Run the N64 script
+# Run the SEGA overlay fix
+./scripts/sega_verlay.sh
+
+# N64 setup
 ./n64/n64_setup.sh
 
-# Run the arcade script
+# arcade setup
 ./arcade/arcade_setup.sh
 
-# Run the overclock script
+# overclock setup
 ./overclock/overclock_setup.sh
 
-# Clear the motd file
+# clear the motd file
 truncate -s 0 /etc/motd

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ###########################################
 # Auto Save/Load State Config Fix
 #
